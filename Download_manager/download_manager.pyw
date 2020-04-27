@@ -1,6 +1,7 @@
 from os import path
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from win10toast import ToastNotifier
 
 import zipfile
 import tarfile
@@ -38,17 +39,18 @@ class Handler(FileSystemEventHandler):
                 file_type = "Powerpoint"
             elif ext == ".exe" or ext == ".msi":
                 file_type = "Application"
+            # If extension is a compressed file, unzips and places it in folder, compressed file goes in zipped folders
             elif ext == ".zip" or ext == ".tar" or ext == ".gz":
                 if ext == ".zip":
-                    print("extracting", filename)
+                    # print("extracting", filename)
                     zipfile.ZipFile(src, 'r').extractall(folder_dest + "/Folders" + "/" + file_ext[0])
-                    print("done extracting")
+                    # print("done extracting")
                 else:
-                    print("untarring", filename)
+                    # print("untarring", filename)
                     tar = tarfile.open(src)
                     tar.extractall(path=folder_dest + "/Folders" + "/" + file_ext[0])
                     tar.close()
-                    print("done untarring")
+                    # print("done untarring")
                 file_type = "Zipped folders"
             elif ext == ".mp3" or ext == ".wav":
                 file_type = "Music"
@@ -58,7 +60,7 @@ class Handler(FileSystemEventHandler):
                 file_type = "Code"
             else:
                 file_type = "Other"
-                print("file: ", file_ext[0], " ext: ", file_ext[1])
+                # print("file: ", file_ext[0], " ext: ", file_ext[1])
 
             # Updating type-specific folder
             folder_dest_type = folder_dest + "/" + file_type
@@ -85,16 +87,19 @@ class Handler(FileSystemEventHandler):
 
 # Running program
 folder_to_track = "/Users/darre/Downloads"
-folder_dest = "/Users/darre/OneDrive/Desktop/Download Manager"
+folder_dest = "/Users/darre/OneDrive/Desktop/Downloads Manager"
 
+toaster = ToastNotifier()
+toaster.show_toast("Download Manager", "Download manager Running", duration=2)
 event_handler = Handler()
 observer = Observer()
 observer.schedule(event_handler, folder_to_track, recursive=True)
 observer.start()
 try:
     while True:
-        time.sleep(10)
+        time.sleep(15)
 except KeyboardInterrupt:
     print("Terminating...")
     observer.stop()
 observer.join()
+toaster.show_toast("Terminating Download Manager", "Download manager terminated", duration=2)
