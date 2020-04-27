@@ -54,13 +54,13 @@ class Handler(FileSystemEventHandler):
                 os.mkdir(folder_dest_type)
 
             # Getting timestamp
-            date = os.path.getmtime(src)
-            month_format = time.strftime("%Y-%m", time.gmtime(date))
+            # date = os.path.getmtime(src)
+            # month_format = time.strftime("%Y-%m", time.gmtime(date))
 
-            full_new_path = folder_dest_type + "/" + month_format
-            if not path.exists(full_new_path):
-                os.mkdir(full_new_path)
-                print("Creating dir: ", full_new_path)
+            full_new_path = folder_dest_type
+            # if not path.exists(full_new_path):
+            #     os.mkdir(full_new_path)
+            #     print("Creating dir: ", full_new_path)
 
             new_dest = full_new_path + "/" + filename
             if not path.exists(new_dest):
