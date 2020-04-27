@@ -3,6 +3,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 import zipfile
+import tarfile
 import os
 import time
 
@@ -41,7 +42,13 @@ class Handler(FileSystemEventHandler):
                 if ext == ".zip":
                     print("extracting", filename)
                     zipfile.ZipFile(src, 'r').extractall(folder_dest + "/Folders" + "/" + file_ext[0])
-                    #os.remove(src)
+                    print("done extracting")
+                else:
+                    print("untarring", filename)
+                    tar = tarfile.open(src)
+                    tar.extractall(path=folder_dest + "/Folders" + "/" + file_ext[0])
+                    tar.close()
+                    print("done untarring")
                 file_type = "Zipped folders"
             elif ext == ".mp3" or ext == ".wav":
                 file_type = "Music"
