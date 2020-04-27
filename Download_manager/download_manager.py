@@ -2,6 +2,7 @@ from os import path
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+import zipfile
 import os
 import time
 
@@ -37,7 +38,11 @@ class Handler(FileSystemEventHandler):
             elif ext == ".exe" or ext == ".msi":
                 file_type = "Application"
             elif ext == ".zip" or ext == ".tar" or ext == ".gz":
-                file_type = "Unzipped folders"
+                if ext == ".zip":
+                    print("extracting", filename)
+                    zipfile.ZipFile(src, 'r').extractall(folder_dest + "/Folders" + "/" + file_ext[0])
+                    #os.remove(src)
+                file_type = "Zipped folders"
             elif ext == ".mp3" or ext == ".wav":
                 file_type = "Music"
             elif ext == ".c" or ext == ".h" or ext == ".java" or ext == ".py" or ext == ".pl" or ext == ".xsd" \
